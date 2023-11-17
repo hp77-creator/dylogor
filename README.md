@@ -53,3 +53,7 @@ users at the same time.
 ElasticSearch will allow us to scale horizontally by providing more clusters
 we can utilize its master-slave architecture to maintain consistency across different
 clusters.
+
+## Development
+
+Using Python:3.10.13 with pyenv virtualenv
