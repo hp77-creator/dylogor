@@ -5,6 +5,8 @@ Dylogor is a tool which stores logs from any microservice and
 can help you query about those logs on the basis of various fields
 in the log document
 
+:info: logs will be sent to port `3000`
+
 An example of log document that is stored in Dylogor:
 
 ```json
