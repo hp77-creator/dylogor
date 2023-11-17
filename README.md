@@ -1,5 +1,5 @@
 ## Dy-log-or
-<img src="img_2.png" alt="drawing" width="50"/>
+<img src="img/img_2.png" alt="drawing" width="50"/>
 
 Dylogor is a tool which stores logs from any microservice and 
 can help you query about those logs on the basis of various fields
@@ -36,7 +36,7 @@ User should be able to query for logs on the basis of the above fields:
 ## Architecture
 
 ### version 1
-![img.png](img.png)
+![img.png](img/img.png)
 This simple approach will give problem when we scale our system, One
 scenario, given that writing to DB and Serving to FE is done by the 
 same server, there may arise a condition when server might be called 
@@ -44,7 +44,7 @@ by our log-sending service and from our FE
 
 ### version 2
 
-![img_1.png](img_1.png)
+![img_1.png](img/img_1.png)
 
 Using Kafka like streaming service to store logs and directly consuming
 from there in BE can be a solution which can help us to serve multiple
