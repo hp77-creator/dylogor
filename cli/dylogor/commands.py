@@ -13,17 +13,30 @@ def progress_animation():
             time.sleep(0.5)
 
 
-def print_fancy_response(response):
+def print_fancy_response(response, page_start=1, page_end=10):
     if response.status_code == 200:
-        try:
-            res = response.json()[0]
-        except IndexError as e:
-            exception_handler("Empty response from server")
-        res_new = res['_source']
-        for key in res_new:
-            click.echo(click.style(f"{key} -> {res_new[key]}", fg="blue"))
-
-    #        click.echo(click.style(res, fg="blue"))
+        response_arr = response.json()
+        page_size = min(page_end, len(response_arr))
+        start_index = (page_start - 1) * page_size
+        end_index = start_index + page_size
+        page_data = response_arr[start_index: end_index]
+       # click.echo(f'Page {page_start}/{len(page_data)//page_size + 1}')
+        for elems in page_data:
+            res_new = elems['_source']
+            click.echo("\n")
+            for key in res_new:
+                if key == 'level':
+                    level_value = res_new[key]
+                    if level_value == 'error':
+                        click.echo(click.style(f"{key} -> {level_value}", fg="red"))
+                    elif level_value == 'warn':
+                        click.echo(click.style(f"{key} -> {level_value}", fg="yellow"))
+                    elif level_value == 'info':
+                        click.echo(click.style(f"{key} -> {level_value}", fg="green"))
+                    elif level_value == 'debug':
+                        click.echo(click.style(f"{key} -> {level_value}", fg="bright_yellow"))
+                else:
+                    click.echo(click.style(f"{key} -> {res_new[key]}", fg="cyan"))
     else:
         click.echo(click.style(f"Server says you are using foul language", fg="yellow"))
 
@@ -70,18 +83,31 @@ def get_param(level, trace_id, message, resource_id, timestamp, span_id, commit)
 @click.option("--timestamp", help="yyyy-mm-ddThh:mm:ssZ", type=click.types.STRING)
 @click.option("--span-id", help="spanId of your log", type=click.types.STRING)
 @click.option("--commit", help="commit of your log", type=click.types.STRING)
+@click.option("--page", default=1,help="page number from which they want to see response", type=click.types.INT)
+@click.option("--page-size", default=10, help="number of response to be shown per array", type=click.types.INT)
 @click.pass_context
-def search(ctx, level, trace_id, message, resource_id, timestamp, span_id, commit):
+def search(ctx, level, trace_id, message, resource_id, timestamp, span_id, commit, page, page_size):
+    del ctx.params['page']
+    del ctx.params['page_size']
     if not any(ctx.params.values()):
-        click.echo(ctx.get_help())
-        sys.exit(1)
-    params = get_param(level, trace_id, message, resource_id, timestamp, span_id, commit)
-    response = ""
-    try:
-        response = requests.get("http://localhost:3000/search", json=params)
-    except exceptions.ConnectionError as nce:
-        exception_handler(nce)
-    except exceptions.RequestException as re:
-        exception_handler(re)
+        response = ""
+        try:
+            response = requests.get("http://localhost:3000/search-all", json={})
+        except exceptions.ConnectionError as nce:
+            exception_handler(nce)
+        except exceptions.RequestException as re:
+            exception_handler(re)
 
-    print_fancy_response(response)
+        print_fancy_response(response, page, page_size)
+    else:
+
+        params = get_param(level, trace_id, message, resource_id, timestamp, span_id, commit)
+        response = ""
+        try:
+            response = requests.get("http://localhost:3000/search", json=params)
+        except exceptions.ConnectionError as nce:
+            exception_handler(nce)
+        except exceptions.RequestException as re:
+            exception_handler(re)
+
+        print_fancy_response(response)

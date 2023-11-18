@@ -1,11 +1,13 @@
 import logging
+import uuid
 
 from api import elastic_test as et
 
 
 def insert_log_in_db(log_entry, ind='test-index'):
     if et.es_status:
-        resp = et.es.index(index=ind, document=log_entry, id='1')
+        new_id = uuid.uuid4()
+        resp = et.es.index(index=ind, document=log_entry, id=new_id)
         #logging.info("Document inserted " + resp.body)
         return resp
     else:
