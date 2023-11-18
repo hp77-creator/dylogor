@@ -1,3 +1,5 @@
+import logging
+
 from elasticsearch import Elasticsearch
 from config.config_handling import get_config_value
 
@@ -14,14 +16,14 @@ def connect_elasticsearch(**kwargs):
     _es_obj = None
     # ensure that you pass certs as well when using https
     _es_obj = Elasticsearch([{'host': 'localhost', 'port' : 9200, 'scheme': 'https'}], ssl_assert_fingerprint=_es_ca_cert, basic_auth=(_es_username, _es_passkey), timeout=10)
-
-    if _es_obj.ping():
-        print('Yay Connect')
-        print(_es_obj.info())
+    _es_status = _es_obj.ping()
+    if _es_status:
+        logging.info('ElasticSearch connected')
+        logging.debug(_es_obj.info())
     else:
-        print('Aww it could not connect')
+        logging.error('ElasticSearch could not be connected')
 
-    return _es_obj
+    return _es_obj, _es_status
 
 
-es = connect_elasticsearch()
+es, es_status = connect_elasticsearch()
