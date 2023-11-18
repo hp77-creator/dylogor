@@ -1,6 +1,6 @@
 import unittest
 
-from api import insert_doc
+from api.elasticsearch_util import insert_log_in_db
 
 
 def insert_utility():
@@ -11,7 +11,7 @@ def insert_utility():
     with open("test_entry.json") as f:
         log_entry = f.read()
         f.close()
-    insert_doc.insert_log_in_db(log_entry)
+    insert_log_in_db(log_entry)
 
 def remove_utility():
     """

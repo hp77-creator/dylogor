@@ -59,3 +59,9 @@ clusters.
 ## Development
 
 Using Python:3.10.13 with pyenv virtualenv
+
+For scaling, I am thinking of storing a week or maybe 2-3 days log in one index
+and after every 2-3 day we can create a new_index and delete our old index or
+store it somewhere else
+
+For FE, going with CLI Tool, would be fast and cool experience for Devs

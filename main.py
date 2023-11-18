@@ -2,7 +2,7 @@ import logging
 
 from flask import Flask, request, jsonify
 from api.elastic_test import connect_elasticsearch
-from api.insert_doc import insert_log_in_db, search_by_key
+from api.elasticsearch_util import insert_log_in_db, search_by_key
 from config.config_handling import get_config_value
 
 app = Flask(__name__)
@@ -36,6 +36,13 @@ def search_all_handler():
 def search_key_handler():
     if request.method == 'GET':
         search_key = request.get_json()
+        """
+        search_key should be like
+        {
+            "level": "info"
+        }
+        in place of "level" any key can be used
+        """
         resp_doc = search_by_key("match", search_key)
         app.logger.info("doc result" + str(resp_doc))
         hits = resp_doc['hits']['hits']

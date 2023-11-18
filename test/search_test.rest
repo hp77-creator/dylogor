@@ -13,6 +13,14 @@ Content-Type: application/json
   "level" : "warn"
 }
 
+### check search with traceId functionality
+GET http://127.0.0.1:3000/search
+Content-Type: application/json
+
+{
+  "traceId" : "abc-xyz-123"
+}
+
 ### check search error functionality
 GET http://127.0.0.1:3000/search
 Content-Type: application/json
