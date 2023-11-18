@@ -1,0 +1,20 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=68.2.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dylogor"
+version = "0.1.0"
+description = "A CLI application that helps you talk with your logs."
+readme = "README.md"
+authors = [{ name = "hp77", email = "himanshu.dn.pandey@gmail.com" }]
+dependencies = [
+    "click >= 8.1.3",
+    "requests >= 2.31.0",
+
+]
+
+[project.scripts]
+dylogor = "dylogor.__main__:cli"
