@@ -6,7 +6,7 @@ import requests
 
 
 from requests import exceptions
-from .utils import print_fancy_response, exception_handler, get_param, get_json_body, get_json_body_ts
+from .utils import print_fancy_response, exception_handler, get_param, get_json_body, get_json_body_ts, asciiart
 
 
 # interface for search
@@ -101,3 +101,30 @@ def search_timestamp(startdate, enddate):
         exception_handler(re)
 
     print_fancy_response(response)
+
+
+@click.command()
+def intro():
+    """
+    Welcome to Your CLI Tool!
+
+    This tool helps you manage and analyze logs efficiently.
+
+    Get started with the following commands:
+    - Use 'search' to query logs.
+    - Explore 'stats' for log statistics.
+    - Check 'help' for more options and information.
+
+    Happy logging!
+    """
+    click.echo(click.style("============================================", fg="blue"))
+    # click.echo(click.style("           Welcome to Dylogor CLI Tool         ", fg="blue", bold=True))
+    click.echo(click.style(asciiart, fg="cyan"))
+    click.echo(click.style("============================================", fg="blue"))
+
+    click.echo("\nThis tool helps you manage and analyze logs efficiently.\n")
+    click.echo("Get started with the following commands:")
+    click.echo("- Use 'search' to query logs.")
+    click.echo("- Check 'help' for more options and information.\n")
+
+    click.echo(click.style("Happy logging!", fg="green", bold=True))

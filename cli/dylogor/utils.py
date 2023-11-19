@@ -1,9 +1,19 @@
-
 import click
 import sys
 import re
 
 from datetime import date, timedelta
+
+asciiart = """
+#####     ##  ##   ##       #####     #####   #####   ######   
+##  ##    ##  ##   ##      ##   ##   ##      ##   ##  ###  ##  
+##   ##   ##  ##   ##      ##   ##  ##       ##   ##  ##   ##  
+##   ##    ####    ##      ##   ##  ##  ###  ##   ##  ##  ##   
+##   ##     ##     ##      ##   ##  ##   ##  ##   ##  #####    
+##  ##      ##     ##      ##   ##   ##  ##  ##   ##  ## ###   
+#####       ##     ######   #####     #####   #####   ##  ### 
+"""
+
 
 
 def print_fancy_response(response, page_start=1, page_end=10):
@@ -89,7 +99,7 @@ def get_json_body_ts(from_, to_):
         return -1
     query_object = {
         "query_string": {
-            "query": f"[{from_} TO {to_}]",
+            "query": f"[{fix_ts(from_)} TO {fix_ts(to_)}]",
             "default_field": "timestamp"
         }
     }
