@@ -11,3 +11,5 @@ def cli():
 
 cli.add_command(commands.search)
 cli.add_command(commands.search_regex)
+cli.add_command(commands.search_timestamp)
+

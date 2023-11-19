@@ -1,6 +1,7 @@
 import json
 import sys
 import time
+import re
 
 import click
 import requests
@@ -116,13 +117,41 @@ def search(ctx, level, trace_id, message, resource_id, timestamp, span_id, commi
 
 def get_json_body(field, expression):
     query_object = {
-            "query_string": {
-                "query": expression,
-                "default_field": field
-            }
+        "query_string": {
+            "query": expression,
+            "default_field": field
+        }
     }
     return query_object
 
+
+def get_json_body_ts(from_, to_):
+    query_object = {
+        "query_string": {
+            "query": f"[{fix_ts(from_)} TO {fix_ts(to_)}]",
+            "default_field": "timestamp"
+        }
+    }
+    return query_object
+
+def fix_ts(ts):
+    if not check_valid_ts(ts):
+        ts += "T00:00:00Z"
+        return ts
+    else:
+        return ts
+
+def check_valid_ts(ts):
+    """
+    Function to check if timestamp is in 2023-09-15T00:00:00Z format or not
+    :param ts:
+    :return bool:
+    """
+    # Define a regex pattern for the date format 'YYYY-MM-DDTHH:MM:SSZ'
+    pattern = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$')
+
+    # Check if the string matches the pattern
+    return bool(pattern.match(ts))
 
 @click.command()
 @click.option("--field", help="name of the field that you want to regex on", type=click.Choice([
@@ -135,6 +164,25 @@ def get_json_body(field, expression):
 @click.option("--expression", help="regex expression")
 def search_regex(field, expression):
     json_body = get_json_body(field, expression)
+    response = ""
+    try:
+        params = {"q": json.dumps(json_body)}
+        response = requests.get("http://localhost:3000/search-reg", params=params)
+    except exceptions.ConnectionError as nce:
+        exception_handler(nce)
+    except exceptions.RequestException as re:
+        exception_handler(re)
+
+    print_fancy_response(response)
+
+
+@click.command()
+@click.option("--startdate",
+              help="Please enter your date in following format: 2023-09-15T00:00:00Z, if you enter 2023-09-15, time will be defaulted")
+@click.option("--enddate",
+              help="Please enter your date in following format: 2023-09-15T00:00:00Z, if you enter 2023-09-15, time will be defaulted")
+def search_timestamp(startdate, enddate):
+    json_body = get_json_body_ts(startdate, enddate)
     response = ""
     try:
         params = {"q": json.dumps(json_body)}
