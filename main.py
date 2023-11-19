@@ -2,7 +2,6 @@ import json
 import logging
 
 from flask import Flask, request, jsonify
-from api.elastic_test import connect_elasticsearch
 from api.elasticsearch_util import insert_log_in_db, search_by_key, search_by_regexp
 from config.config_handling import get_config_value
 
