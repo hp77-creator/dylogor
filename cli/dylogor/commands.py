@@ -1,4 +1,6 @@
 import json
+import sys
+
 import click
 import requests
 
@@ -85,6 +87,10 @@ def search_regex(field, expression):
               help="Please enter your date in following format: 2023-09-15T00:00:00Z, if you enter 2023-09-15, time will be defaulted.")
 def search_timestamp(startdate, enddate):
     json_body = get_json_body_ts(startdate, enddate)
+    if json_body == -1:
+        click.echo("Date is not given properly")
+        click.echo("please use --help to know the format")
+        sys.exit(1)
     response = ""
     try:
         params = {"q": json.dumps(json_body)}

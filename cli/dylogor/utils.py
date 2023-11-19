@@ -1,6 +1,9 @@
+
 import click
 import sys
 import re
+
+from datetime import date, timedelta
 
 
 def print_fancy_response(response, page_start=1, page_end=10):
@@ -66,9 +69,27 @@ def get_json_body(field, expression):
 
 
 def get_json_body_ts(from_, to_):
+    if from_ is None and to_ is not None:
+        from_ = date.today().strftime("%Y-%m-%d")
+    elif to_ is None and from_ is not None:
+        to_ = date.today().strftime("%Y-%m-%d")
+    else:
+        to_ = date.today()
+        from_ = to_ - timedelta(1)
+        to_ = to_.strftime("%Y-%m-%d")
+        from_ = from_.strftime("%Y-%m-%d")
+    try:
+        to_ = fix_ts(to_)
+        from_ = fix_ts(from_)
+        if not check_valid_ts(to_):
+            raise ValueError
+        if not check_valid_ts(from_):
+            raise ValueError
+    except ValueError as ve:
+        return -1
     query_object = {
         "query_string": {
-            "query": f"[{fix_ts(from_)} TO {fix_ts(to_)}]",
+            "query": f"[{from_} TO {to_}]",
             "default_field": "timestamp"
         }
     }

@@ -54,6 +54,7 @@ User should be able to query for logs on the basis of the above fields:
 
 ### version 1
 ![img.png](img/img.png)
+
 This simple approach will give problem when we scale our system, One
 scenario, given that writing to DB and Serving to FE is done by the 
 same server, there may arise a condition when server might be called 
