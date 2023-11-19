@@ -1,3 +1,4 @@
+import json
 import sys
 import time
 
@@ -20,7 +21,7 @@ def print_fancy_response(response, page_start=1, page_end=10):
         start_index = (page_start - 1) * page_size
         end_index = start_index + page_size
         page_data = response_arr[start_index: end_index]
-       # click.echo(f'Page {page_start}/{len(page_data)//page_size + 1}')
+        # click.echo(f'Page {page_start}/{len(page_data)//page_size + 1}')
         for elems in page_data:
             res_new = elems['_source']
             click.echo("\n")
@@ -83,7 +84,7 @@ def get_param(level, trace_id, message, resource_id, timestamp, span_id, commit)
 @click.option("--timestamp", help="yyyy-mm-ddThh:mm:ssZ", type=click.types.STRING)
 @click.option("--span-id", help="spanId of your log", type=click.types.STRING)
 @click.option("--commit", help="commit of your log", type=click.types.STRING)
-@click.option("--page", default=1,help="page number from which they want to see response", type=click.types.INT)
+@click.option("--page", default=1, help="page number from which they want to see response", type=click.types.INT)
 @click.option("--page-size", default=10, help="number of response to be shown per array", type=click.types.INT)
 @click.pass_context
 def search(ctx, level, trace_id, message, resource_id, timestamp, span_id, commit, page, page_size):
@@ -111,3 +112,36 @@ def search(ctx, level, trace_id, message, resource_id, timestamp, span_id, commi
             exception_handler(re)
 
         print_fancy_response(response)
+
+
+def get_json_body(field, expression):
+    query_object = {
+            "query_string": {
+                "query": expression,
+                "default_field": field
+            }
+    }
+    return query_object
+
+
+@click.command()
+@click.option("--field", help="name of the field that you want to regex on", type=click.Choice([
+    "message",
+    "resourceId",
+    "spanId",
+    "commit",
+    "level"
+]))
+@click.option("--expression", help="regex expression")
+def search_regex(field, expression):
+    json_body = get_json_body(field, expression)
+    response = ""
+    try:
+        params = {"q": json.dumps(json_body)}
+        response = requests.get("http://localhost:3000/search-reg", params=params)
+    except exceptions.ConnectionError as nce:
+        exception_handler(nce)
+    except exceptions.RequestException as re:
+        exception_handler(re)
+
+    print_fancy_response(response)

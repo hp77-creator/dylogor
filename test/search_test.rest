@@ -29,6 +29,28 @@ Content-Type: application/json
   "level" : "error"
 }
 
+
+### check search regexp functionality (this does not work)
+GET http://127.0.0.1:3000/search-reg
+Content-Type: application/json
+
+{
+  "query": {
+    "regexp": {
+      "message": {
+        "value": "Failed.*"
+      }
+    }
+  }
+}
+
+### check search regexp with querystring functionality
+GET http://127.0.0.1:3000/search-reg?q={"query_string": {"query": "Failed*","default_field": "message"}}
+
+### check search regexp with querystring and timestamp functionality
+GET http://127.0.0.1:3000/search-reg?q={"query_string": {"query": "[2023-09-15T00:00:00Z TO 2023-11-19T23:59:59Z]","default_field": "timestamp"}}
+
+
 ###Insert doc
 POST http://127.0.0.1:3000/
 Content-Type: application/json
