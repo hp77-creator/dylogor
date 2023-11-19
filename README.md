@@ -5,6 +5,21 @@ Dylogor is a tool which stores logs from any microservice and
 can help you query about those logs on the basis of various fields
 in the log document
 
+## Things that are delivered at the end of submission:
+- log storing capability on port 3000 
+  - Using ElasticSearch to create a new index and storing document as they are inserted
+  - Currently it is working for local setup
+- Search functionality
+  - Implemented search all
+  - Search by key i.e filter
+  - Search with regex
+  - Search with timestamp
+  - APIs were created using Flask
+- Provided a CLI to the tool
+  - Used Click to create a CLI
+  - Information on cli is in this [README](cli/README.md)
+
+
 :info: logs will be sent to port `3000`
 
 An example of log document that is stored in Dylogor:
@@ -65,3 +80,4 @@ and after every 2-3 day we can create a new_index and delete our old index or
 store it somewhere else
 
 For FE, going with CLI Tool, would be fast and cool experience for Devs
+

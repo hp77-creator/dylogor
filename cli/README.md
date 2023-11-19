@@ -1,4 +1,20 @@
-### CLI Tool
+## CLI Tool
+
+### Installation
+
+- Create a virtual environment using `virtualenv`. I used `pyenv-virtualenv`
+- Follow the below commands
+
+(Assuming you have created a virtual environment)
+
+```shell
+source venv/bin/activate
+cd cli
+python -m pip install -e .
+```
+
+Hurray `dylogor` is installed in your virtualenv
+you can run it by following below steps
 
 ```shell
 
@@ -11,6 +27,7 @@ Options:
 Commands:
   search
 ```
+
 
 ```shell
 Usage: dylogor search [OPTIONS]
